@@ -3,13 +3,24 @@
 
 ;; Utils
 
-(defn substitute-on-vec [m first-key substitute-first-key f]
+(defn compute-substitution [m substitution first-key substitute-first-key f]
+  (let [result (into substitution
+                     (comp
+                       (keep (fn [key]
+                               (if (and (vector? key)
+                                        (= (first key) first-key))
+                                 (let [second-key (second key)]
+                                   [key {:key [substitute-first-key second-key]
+                                         :f   (partial f second-key)}]))))
+                       (remove #(-> % first substitution)))
+                     (keys m))]
+    result))
+
+(defn substitute [m substitution]
   (into {}
-        (map (fn [[key value :as entry]]
-               (if (and (vector? key)
-                        (= (first key) first-key))
-                 (let [second-key (second key)]
-                   [[substitute-first-key second-key] (f second-key value)])
+        (map (fn [[key1 val :as entry]]
+               (if-let [{:keys [key f]} (get substitution key1)]
+                 [key (f val)]
                  entry)))
         m))
 
@@ -28,17 +39,17 @@
 
 (defonce block-hierarchy (make-hierarchy))
 
-(defmulti block-transform (fn [block-key system+profile ig-config]
+(defmulti block-transform (fn [block-key system+profile ig-config final-substitution]
                             block-key)
           :hierarchy #'block-hierarchy)
 
-(defmulti typed-block-transform (fn [block-key system+profile ig-config]
+(defmulti typed-block-transform (fn [block-key system+profile ig-config final-substitution]
                                   [block-key (-> system+profile block-key :type)])
           :hierarchy #'block-hierarchy)
 
 (defmethod block-transform :default
-  [block-key system+profile ig-config]
-  (typed-block-transform block-key system+profile ig-config))
+  [block-key system+profile ig-config final-substitution]
+  (typed-block-transform block-key system+profile ig-config final-substitution))
 
 (defmacro alias-block! [child-block parent-block]
   `(let [child-block#  ~child-block
@@ -48,25 +59,27 @@
 
 ;; to integrant
 
-(defn reduce-ig [{:keys [blocks] :as system+profile} ig-config]
-  (reduce (fn [ig-config block]
-            (block-transform block system+profile ig-config))
-          ig-config
+(defn reduce-ig [{:keys [blocks] :as system+profile} ig-config final-substitution]
+  (reduce (fn [step block]
+            (block-transform block system+profile (first step) (second step)))
+          [ig-config final-substitution]
           blocks))
 
 (def max-reductions 100)
 
 (defn system->ig [system profile]
   (let [system+profile (merge system profile)]
-    (loop [i         0
-           ig-config (reduce-ig system+profile {})]
+    (loop [i                   0
+           config+substitution (reduce-ig system+profile {} {})]
       (when (>= i max-reductions)
         (throw (IllegalStateException. "Could not reduce")))
-      (let [next-ig-config (reduce-ig system+profile ig-config)]
-        (if (= next-ig-config ig-config)
-          ig-config
+      (let [next-config+substitution (reduce-ig system+profile
+                                                (first config+substitution)
+                                                (second config+substitution))]
+        (if (= next-config+substitution config+substitution)
+          (apply substitute config+substitution)
           (recur (inc i)
-                 next-ig-config))))))
+                 next-config+substitution))))))
 
 ;; Init
 

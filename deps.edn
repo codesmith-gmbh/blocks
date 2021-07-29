@@ -1,5 +1,6 @@
 {:paths   ["src"]
  :deps    {org.clojure/clojure {:mvn/version "1.10.3"}
            integrant/integrant {:mvn/version "0.8.0"}}
- :aliases {:dev  {:extra-paths ["dev"]}
+ :aliases {:dev  {:extra-paths ["dev"]
+                  :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}
            :test {:extra-paths ["test"]}}}
