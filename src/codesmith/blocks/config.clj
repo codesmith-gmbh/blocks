@@ -11,7 +11,7 @@
                                  (get (:block-name config))
                                  (get (:parameter-name config))))))
 
-(defmethod cb/typed-block-transform [::cb/config :inline]
+(defmethod cb/typed-block-transform [::config :inline]
   [block-key system+profile ig-config final-substitution]
   [ig-config (compute-inline-substitution ig-config final-substitution system+profile
                                           block-key ::inline)])
@@ -20,9 +20,9 @@
   [_ value]
   value)
 
-(derive ::inline ::cb/config)
+(derive ::inline ::config)
 
-(defmethod cb/typed-block-transform [::cb/config :single-edn-file]
+(defmethod cb/typed-block-transform [::config :single-edn-file]
   [block-key system+profile ig-config final-substitution]
   (let [ref-keyword       (cb/ref-keyword block-key)
         file-resource-key [::single-edn-file ref-keyword]
@@ -44,8 +44,8 @@
       (get block-name)
       (get parameter-name)))
 
-(derive ::double-map-value ::cb/config)
+(derive ::double-map-value ::config)
 
 ;; Secrets just derive from the main block
 
-(cb/alias-block! ::cb/secret ::cb/config)
+(cb/alias-block! ::secret ::config)
