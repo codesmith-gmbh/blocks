@@ -1,42 +1,17 @@
 (ns stan
-  (:require [codesmith.blocks :as cb]
-            [codesmith.blocks.config :as cbc]
-            [integrant.repl :as ir]
-            [integrant.repl.state :as irs]
-            [integrant.core :as ig]))
+  (:require [codesmith.blocks.config-test :as cbct]
+            [codesmith.blocks :as cb]
+            [codesmith.blocks.config :as cbc]))
 
-(def system {:application :timeflow
-             :blocks      [::cbc/config
-                           ::config-block]})
-
-(def profile-inline {:environment   :dev
-                     ::config-block {}
-                     ::cbc/config   {:type   :inline
-                                     :config {:hello {:config 1}}}})
-
-(def profile-file {:environment   :dev
-                   ::config-block {}
-                   ::cbc/config   {:type :single-edn-file
-                                   :file "./dev/test.edn"}})
-
-(defmethod ig/init-key ::config-block
-  [_ config]
-  config)
-
-(defmethod cb/block-transform ::config-block
-  [_ system+profile ig-config final-substitution]
-  [(assoc ig-config ::config-block (ig/ref [::cbc/config ::config])
-                    [::cbc/config ::config] {:block-name     :hello
-                                             :parameter-name :config})
-   final-substitution])
-
-(ir/set-prep! (constantly (cb/system->ig system profile-file)))
 
 (comment
 
-  (cb/system->ig system profile-inline)
-
-  (ir/go)
-  irs/system
+  (let [test-config  {:a 1}
+        test2-config {:b 2}
+        profile      {:environment :test
+                      ::cbc/config {:type        :inline
+                                    ::cbct/test  test-config
+                                    ::cbct/test2 test2-config}}]
+    (cb/system->ig cbct/spec profile))
 
   )

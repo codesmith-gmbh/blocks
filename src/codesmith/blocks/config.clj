@@ -1,20 +1,18 @@
 (ns codesmith.blocks.config
   (:require [codesmith.blocks :as cb]
             [integrant.core :as ig]
-            [clojure.edn :as edn]))
+            [aero.core :as aero]
+            [clojure.java.io :as io]))
 
-(defn- compute-inline-substitution [ig-config final-substitution system+profile block-key inline-block-key]
-  (cb/compute-substitution ig-config final-substitution
-                           block-key inline-block-key
-                           (fn [_ config]
-                             (-> system+profile block-key :config
-                                 (get (:block-name config))
-                                 (get (:parameter-name config))))))
+(defmethod cb/block-transform ::configured
+  [block-key spec+profile ig-config]
+  (assoc ig-config block-key
+                   (assoc (spec+profile block-key)
+                     :config (ig/ref ::config))))
 
 (defmethod cb/typed-block-transform [::config :inline]
-  [block-key system+profile ig-config final-substitution]
-  [ig-config (compute-inline-substitution ig-config final-substitution system+profile
-                                          block-key ::inline)])
+  [block-key spec+profile ig-config]
+  (assoc ig-config ::inline (-> spec+profile block-key)))
 
 (defmethod ig/init-key ::inline
   [_ value]
@@ -22,30 +20,16 @@
 
 (derive ::inline ::config)
 
-(defmethod cb/typed-block-transform [::config :single-edn-file]
-  [block-key system+profile ig-config final-substitution]
-  (let [ref-keyword       (cb/ref-keyword block-key)
-        file-resource-key [::single-edn-file ref-keyword]
-        ig-config         (assoc ig-config
-                            file-resource-key (-> system+profile block-key))]
-    [ig-config (cb/compute-substitution ig-config
-                                        final-substitution
-                                        block-key ::double-map-value
-                                        (fn [_ config] config
-                                          (assoc config :loaded-file (ig/ref file-resource-key))))]))
+(defmethod cb/typed-block-transform [::cb/config :aero]
+  [block-key spec+profile ig-config]
+  (assoc ig-config ::aero (-> spec+profile block-key)))
 
-(defmethod ig/init-key ::single-edn-file
-  [_ {:keys [file]}]
-  (edn/read-string (slurp file)))
+(defmethod ig/init-key ::aero
+  [_ {:keys [file resource environment]}]
+  (aero/read-config (let [file (io/file file)]
+                      (if (and file (.exists file))
+                        file
+                        (io/resource (or resource "config.edn"))))
+                    {:profile environment}))
 
-(defmethod ig/init-key ::double-map-value
-  [_ {:keys [loaded-file block-name parameter-name]}]
-  (-> loaded-file
-      (get block-name)
-      (get parameter-name)))
-
-(derive ::double-map-value ::config)
-
-;; Secrets just derive from the main block
-
-(cb/alias-block! ::secret ::config)
+(derive ::aero ::config)
