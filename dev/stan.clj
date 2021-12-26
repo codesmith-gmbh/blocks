@@ -10,7 +10,7 @@
   (let [test-config  {:a 1}
         test2-config {:b 2}
         profile      {:environment :test
-                      ::cbc/config {:type        :inline
+                      ::cbc/config {:type        :aero
                                     ::cbct/test  test-config
                                     ::cbct/test2 test2-config}}]
     (cb/system->ig cbct/spec profile))

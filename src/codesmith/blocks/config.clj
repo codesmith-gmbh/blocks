@@ -26,7 +26,7 @@
 
 (derive ::inline ::config)
 
-(defmethod cb/typed-block-transform [::cb/config :aero]
+(defmethod cb/typed-block-transform [::config :aero]
   [block-key spec+profile ig-config]
   (assoc ig-config ::aero (-> spec+profile block-key)))
 
