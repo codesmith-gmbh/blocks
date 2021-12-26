@@ -4,11 +4,17 @@
             [aero.core :as aero]
             [clojure.java.io :as io]))
 
+(defn assoc-config [ig-config block-key]
+  (update ig-config block-key #(assoc % :config (ig/ref ::config))))
+
+(defn assoc-from-spec+profile-config [ig-config block-key spec+profile]
+  (-> ig-config
+      (cb/assoc-from-spec+profile block-key spec+profile)
+      (assoc-config block-key)))
+
 (defmethod cb/block-transform ::configured
   [block-key spec+profile ig-config]
-  (assoc ig-config block-key
-                   (assoc (spec+profile block-key)
-                     :config (ig/ref ::config))))
+  (assoc-from-spec+profile-config ig-config block-key spec+profile))
 
 (defmethod cb/typed-block-transform [::config :inline]
   [block-key spec+profile ig-config]

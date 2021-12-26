@@ -4,13 +4,13 @@
             [codesmith.blocks.config :as cbc]
             [integrant.core :as ig]))
 
-(derive ::test ::cbc/configured)
+(cb/set-same-block-transform! ::test ::cbc/configured)
 
 (defmethod ig/init-key
   ::test [service-key {:keys [config]}]
   (config service-key))
 
-(derive ::test2 ::test)
+(cb/set-same-block! ::test2 ::test)
 
 (def spec {:appliction :test
            :blocks     [::cbc/config
