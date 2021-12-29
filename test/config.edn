@@ -1,2 +1,2 @@
-{:codesmith.blocks.config-test/test {:a 1}
+{:codesmith.blocks.config-test/test1 {:a 1}
  :codesmith.blocks.config-test/test2 {:b 2}}

@@ -5,32 +5,33 @@
             [integrant.core :as ig]
             [clojure.java.io :as io]))
 
-(cb/set-same-block-transform! ::test ::cbc/configured)
+(derive ::test ::cbc/configured)
 
 (defmethod ig/init-key
   ::test [service-key {:keys [config]}]
   (config service-key))
 
-(cb/set-same-block! ::test2 ::test)
+(derive ::test1 ::test)
+(derive ::test2 ::test)
 
 (def spec {:appliction :test
            :blocks     [::cbc/config
-                        ::test
+                        ::test1
                         ::test2]})
 
-(def test-config {:a 1})
+(def test1-config {:a 1})
 (def test2-config {:b 2})
 
 (defn config-test [config-config expected-test2]
   (let [profile {:environment :test
                  ::cbc/config config-config}
         system  (cb/init spec profile)]
-    (is (= test-config (::test system)))
+    (is (= test1-config (::test1 system)))
     (is (= expected-test2 (::test2 system)))))
 
 (deftest inline-config-correctness
   (config-test {:type   :inline
-                ::test  test-config
+                ::test1 test1-config
                 ::test2 test2-config}
                test2-config))
 

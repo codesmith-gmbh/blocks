@@ -19,33 +19,6 @@
   [block-key spec+profile ig-config]
   (assoc-from-spec+profile ig-config block-key spec+profile))
 
-;; duplicate blocks
-
-(defn add-method [^MultiFn multifn dispatch-val fn]
-  (.addMethod multifn dispatch-val fn))
-
-(defn set-same-method! [^MultiFn multifn dispatch-val-dst dispatch-val-src]
-  (if-let [method (get-method multifn dispatch-val-src)]
-    (if (not= method (get-method multifn :default))
-      (add-method multifn dispatch-val-dst method))))
-
-(defn set-same-methods! [multifns dispatch-val-dst dispatch-val-src]
-  (doseq [multifn multifns]
-    (set-same-method! multifn dispatch-val-dst dispatch-val-src)))
-
-(defn set-same-block-transform! [dispatch-val-dst dispatch-val-src]
-  (set-same-methods! [block-transform typed-block-transform]
-                     dispatch-val-dst
-                     dispatch-val-src))
-
-(defn set-same-block! [dispatch-val-dst dispatch-val-src]
-  (set-same-block-transform! dispatch-val-dst dispatch-val-src)
-  (set-same-methods! [ig/init-key ig/halt-key!
-                      ig/prep-key ig/resolve-key
-                      ig/resume-key ig/suspend-key!]
-                     dispatch-val-dst
-                     dispatch-val-src))
-
 ;; to integrant
 
 (defn reduce-ig [{:keys [blocks] :as spec+profile} ig-config]
