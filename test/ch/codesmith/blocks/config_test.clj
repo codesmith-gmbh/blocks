@@ -1,7 +1,7 @@
-(ns codesmith.blocks.config-test
-  (:require [clojure.test :refer :all]
-            [codesmith.blocks :as cb]
-            [codesmith.blocks.config :as cbc]
+(ns ch.codesmith.blocks.config-test
+  (:require [ch.codesmith.blocks :as cb]
+            [ch.codesmith.blocks.config :as cbc]
+            [clojure.test :refer :all]
             [integrant.core :as ig]
             [clojure.java.io :as io]))
 

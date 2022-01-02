@@ -1,5 +1,5 @@
-(ns codesmith.blocks.config
-  (:require [codesmith.blocks :as cb]
+(ns ch.codesmith.blocks.config
+  (:require [ch.codesmith.blocks :as cb]
             [integrant.core :as ig]
             [aero.core :as aero]
             [clojure.java.io :as io]))

@@ -6,7 +6,7 @@
   {:license        :epl
    :inception-year 2020
    :description    "Utils on top of integrant"
-   :group-id       "codesmith"
+   :group-id       "ch.codesmith"
    :name           "blocks"
    :gh-project     "codesmith-gmbh/blocks"
    :org-name       "Codesmith GmbH"

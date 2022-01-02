@@ -1,6 +1,6 @@
-(ns codesmith.blocks-test
-  (:require [clojure.test :refer :all]
-            [codesmith.blocks :as cb]
+(ns ch.codesmith.blocks-test
+  (:require [ch.codesmith.blocks :as cb]
+            [clojure.test :refer :all]
             [integrant.core :as ig]))
 
 (defmethod ig/init-key ::test
