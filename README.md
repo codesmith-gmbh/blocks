@@ -1,5 +1,7 @@
 # Codesmith Blocks
 
+[![Clojars Project](https://img.shields.io/clojars/v/ch.codesmith/blocks.svg)](https://clojars.org/ch.codesmith/blocks)
+
 Building blocks using James Reese's Integrant.
 
 ## License
