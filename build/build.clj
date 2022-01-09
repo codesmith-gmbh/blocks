@@ -26,6 +26,7 @@
     (libs/deploy {:jar-file jar-file
                   :lib      lib
                   :pom-file "target/classes/META-INF/maven/ch.codesmith/blocks/pom.xml"})
+    (sh/sh! "git" "clean" "-df")
     (rel/git-release! {:deps/coord          lib
                        :version             version
                        :release-branch-name release-branch-name})))
