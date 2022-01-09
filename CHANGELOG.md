@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.3.22
+
 ### Changed
 
 - new anvil tooling version
