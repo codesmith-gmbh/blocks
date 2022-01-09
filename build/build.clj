@@ -29,5 +29,6 @@
     (sh/sh! "git" "clean" "-df")
     (rel/git-release! {:deps/coord          lib
                        :version             version
-                       :release-branch-name release-branch-name})))
+                       :release-branch-name release-branch-name
+                       :deps/manifest       :mvn})))
 
