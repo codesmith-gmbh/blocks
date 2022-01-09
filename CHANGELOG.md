@@ -1,16 +1,14 @@
-# Unreleased
+# CHANGELOG
 
-## Added
+## 0.3.20
 
-## Fixed
-
-## Changed
+### Changed
 
 - using anvil tooling for building and deployment
 
-# 0.2.12 (2022-01-02 / 4b31c52)
+## 0.2.12 (2022-01-02 / 4b31c52)
 
-## Added
+### Added
 
 - block transform multimethods for [integrant](https://github.com/weavejester/integrant).
 - config blocks with [aero](https://github.com/juxt/aero).

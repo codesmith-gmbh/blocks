@@ -4,6 +4,12 @@
 
 Building blocks using James Reese's Integrant.
 
+To use, include in your deps.edn
+
+```
+ch.codesmith/blocks {:mvn/version "0.3.20}"
+```
+
 ## License
 
 Copyright © 2021-2022 Codesmith GmbH
