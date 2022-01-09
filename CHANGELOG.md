@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+### Changed
+
+- new anvil tooling version
+
 ## 0.3.20
 
 ### Changed

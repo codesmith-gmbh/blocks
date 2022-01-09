@@ -5,7 +5,7 @@
  :aliases {:dev      {:extra-paths ["dev"]}
            :test     {:extra-paths ["test"]}
            :build    {:extra-paths ["build"]
-                      :extra-deps  {io.github.codesmith-gmbh/anvil {:git/tag "v0.2.55" :git/sha "2003cf4"}}
+                      :extra-deps  {io.github.codesmith-gmbh/anvil {:git/tag "v0.2.60" :git/sha "4af2b92"}}
                       :ns-default  build}
            :runner   {:extra-deps {lambdaisland/kaocha {:mvn/version "1.60.977"}}
                       :main-opts  ["-m" "kaocha.runner"]}
