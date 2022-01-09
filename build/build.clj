@@ -6,7 +6,7 @@
 
 (def lib 'ch.codesmith/block)
 (def version (str "0.3." (b/git-count-revs {})))
-(def release-branch-name "main")
+(def release-branch-name "master")
 
 
 (defn run-tests []
