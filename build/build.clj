@@ -12,14 +12,18 @@
   {:license        :epl
    :inception-year 2020
    :description    "Utils on top of integrant"
+   :organization   {:name "Codesmith GmbH"
+                    :url  "https://codesmith.ch"}
    :gh-project     "codesmith-gmbh/blocks"
-   :org-name       "Codesmith GmbH"
-   :authors        ["Stanislas Nanchen"]
-   :org-url        "https://codesmith.ch"})
+   :authors        [{:name  "Stanislas Nanchen"
+                     :email "stan@codesmith.ch"}]
+   :scm            {:type         :github
+                    :organization "codesmith-gmbh"
+                    :project      "blocks"}})
 
 
-(defn run-tests []
-  (sh/sh! "./bin/kaocha"))
+(defn verify []
+  (sh/sh! "./build/verify"))
 
 (defn jar [_]
   (libs/jar {:lib              lib
@@ -31,7 +35,7 @@
 
 (defn release [_]
   (rel/check-released-allowed release-branch-name)
-  (run-tests)
+  (verify)
   (let [jar-file (jar {})]
     (libs/deploy {:jar-file jar-file
                   :lib      lib
