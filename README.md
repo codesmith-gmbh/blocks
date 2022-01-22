@@ -7,7 +7,7 @@ Building blocks using James Reese's Integrant.
 To use, include in your deps.edn
 
 ```
-ch.codesmith/blocks {:mvn/version "0.3.22}"
+ch.codesmith/blocks {:mvn/version "0.3.28"}
 ```
 
 ## License
