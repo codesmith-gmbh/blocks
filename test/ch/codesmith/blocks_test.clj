@@ -1,6 +1,6 @@
 (ns ch.codesmith.blocks-test
   (:require [ch.codesmith.blocks :as cb]
-            [clojure.test :refer :all]
+            [clojure.test :refer [deftest is]]
             [integrant.core :as ig]))
 
 (defmethod ig/init-key ::test
@@ -11,7 +11,7 @@
 (derive ::test2 ::test)
 
 (defmethod cb/block-transform ::all
-  [block-key spec+profile ig-config]
+  [block-key _ ig-config]
   (assoc ig-config block-key {:test1 (ig/ref ::test1)
                               :test2 (ig/ref ::test2)}))
 

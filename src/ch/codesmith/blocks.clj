@@ -1,10 +1,10 @@
 (ns ch.codesmith.blocks
   (:require [integrant.core :as ig]))
 
-(defmulti block-transform (fn [block-key spec+profile ig-config]
+(defmulti block-transform (fn #_{:clj-kondo/ignore [:unused-binding]} [block-key spec+profile ig-config]
                             block-key))
 
-(defmulti typed-block-transform (fn [block-key spec+profile ig-config]
+(defmulti typed-block-transform (fn #_{:clj-kondo/ignore [:unused-binding]} [block-key spec+profile ig-config]
                                   [block-key (-> spec+profile block-key :type)]))
 
 (defmethod block-transform :default
